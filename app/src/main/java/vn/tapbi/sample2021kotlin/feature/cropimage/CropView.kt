@@ -140,7 +140,7 @@ class CropView : StickerView {
 //            }
 
             val scaleX = scaleX(downX, event.x)
-            val scaleY = scaleX(downY, event.y)
+            val scaleY = scaleY(downY, event.y)
 
             moveMatrix.set(downMatrix)
             moveMatrix.postScale(
@@ -209,8 +209,6 @@ class CropView : StickerView {
 
             return BitmapUtils.cropBitmapToBoundingBox(resultImage, Color.TRANSPARENT)
         }
-
-
 
         return null
     }

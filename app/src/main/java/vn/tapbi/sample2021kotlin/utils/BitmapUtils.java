@@ -13,6 +13,7 @@ import android.net.Uri;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class BitmapUtils {
@@ -93,7 +94,9 @@ public class BitmapUtils {
         try {
             fos =  new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG,100,fos);
-        } catch (FileNotFoundException e) {
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return Uri.fromFile(file);
@@ -104,9 +107,13 @@ public class BitmapUtils {
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
             bitmap = BitmapFactory.decodeStream(inputStream);
+
+            assert inputStream != null;
+            inputStream.close();
+
             return bitmap;
 
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

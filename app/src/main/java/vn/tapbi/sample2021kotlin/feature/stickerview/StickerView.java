@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import timber.log.Timber;
 import vn.tapbi.sample2021kotlin.R;
 import vn.tapbi.sample2021kotlin.utils.Utils;
 
@@ -435,7 +436,6 @@ public class StickerView extends FrameLayout {
 
                     if (constrained) {
                         constrainSticker(handlingSticker);
-//                        constrainSticker2(handlingSticker);
                     }
 
                 }
@@ -539,18 +539,33 @@ public class StickerView extends FrameLayout {
         sticker.getMappedCenterPoint(currentCenterPoint, point, tmp);
         if (currentCenterPoint.x - stickerWidth/2 < 0) {
             moveX = -currentCenterPoint.x + stickerWidth/2;
+            Timber.e("currentCenterPoint.x: %s", currentCenterPoint.x);
+            Timber.e("stickerWidth: %s", stickerWidth);
+            Timber.e("moveX: %s", moveX);
         }
 
         if (currentCenterPoint.x + stickerWidth/2 > getWidth()) {
             moveX = getWidth() - currentCenterPoint.x - stickerWidth/2;
+            Timber.e("currentCenterPoint.x: %s", currentCenterPoint.x);
+            Timber.e("stickerWidth: %s", stickerWidth);
+            Timber.e("moveX: %s", moveX);
+            Timber.e("getWidth: %s", getWidth());
         }
 
         if (currentCenterPoint.y - stickerHeight/2 < 0) {
             moveY = -currentCenterPoint.y + stickerHeight/2;
+            Timber.e("currentCenterPoint.y: %s", currentCenterPoint.y);
+            Timber.e("stickerHeight: %s", stickerHeight);
+            Timber.e("moveY: %s", moveY);
+            Timber.e("getHeight: %s", getHeight());
         }
 
         if (currentCenterPoint.y + stickerHeight/2 > getHeight()) {
             moveY = getHeight() - currentCenterPoint.y - stickerHeight/2;
+            Timber.e("currentCenterPoint.y: %s", currentCenterPoint.y);
+            Timber.e("stickerHeight: %s", getHeight());
+            Timber.e("moveY: %s", moveY);
+            Timber.e("getHeight: %s", getHeight());
         }
 
         sticker.getMatrix().postTranslate(moveX, moveY);

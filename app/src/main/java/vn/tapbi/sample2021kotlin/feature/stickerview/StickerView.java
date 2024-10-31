@@ -671,14 +671,6 @@ public class StickerView extends FrameLayout {
     }
 
 
-//    protected Boolean isInImageRange(PointF point) {
-//        Float[] f = new Float[9];
-//        getMatrix().getValues(f);
-//
-//        int imageScaledWidth = Math.round(getWidth() * f[Matrix.MSCALE_X]);
-//        int imageScaledHeight = Math.round(getHeight() * f[Matrix.MSCALE_Y]);
-//        return (point.x >= currentCenterPoint)
-//    }
 
     private float limitScaleSize(Sticker sticker, float newDistance) {
         float scaleFactor = newDistance / oldDistance;

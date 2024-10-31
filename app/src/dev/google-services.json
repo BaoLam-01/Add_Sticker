@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "985647131857",
+    "project_id": "tapbi-sample-2021-kotlin",
+    "storage_bucket": "tapbi-sample-2021-kotlin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985647131857:android:cc9cfa4ec8e6843f74e9f0",
+        "android_client_info": {
+          "package_name": "vn.tapbi.sample2021kotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "985647131857-tota5apt1nm6pdkf20vu93qb4t761pi6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOjhmMUCLPDeAENdASqOMqgexj6GCJgdI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "985647131857-tota5apt1nm6pdkf20vu93qb4t761pi6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

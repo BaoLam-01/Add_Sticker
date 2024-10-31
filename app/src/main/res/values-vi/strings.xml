@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delete">xóa</string>
+    <string name="weather_prefix">Nhiệt độ hiện tại là %1s %2s </string>
+    <string name="weather_error">Lấy thông tin thời tiết gặp lỗi.Vui lòng thử lại sau!</string>
+    <string name="weather_no_info">Không có thông tin vê thời tiết hiện tại.</string>
+    <string name="yes">Có</string>
+    <string name="no">không</string>
+    <string name="do_you_want_to_exit">Bạn có muốn thoát khỏi màn hình hiện tại?</string>
+    <string name="delete_message_confirm">Bạn có chắc chắn muốn xóa tin nhắn này?</string>
+</resources>

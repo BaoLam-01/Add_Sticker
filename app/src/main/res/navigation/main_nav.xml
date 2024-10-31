@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav.xml"
+    app:startDestination="@id/cropImage">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="vn.tapbi.sample2021kotlin.ui.main.home.HomeFragment"
+        android:label="HomeFragment" />
+
+    <fragment
+        android:id="@+id/cutOutFragment"
+        android:name="vn.tapbi.sample2021kotlin.ui.main.handcutout.HandCutOutFragment"
+        android:label="Cut Out Fragment" />
+    <fragment
+        android:id="@+id/cropImage"
+        android:name="vn.tapbi.sample2021kotlin.ui.main.cropimage.CropImageFragment"
+        android:label="Crop Image Fragment" />
+    <fragment
+        android:id="@+id/showCutFragment"
+        android:name="vn.tapbi.sample2021kotlin.ui.main.showcut.ShowCutFragment"
+        android:label="Show Cut Fragment" />
+
+</navigation>

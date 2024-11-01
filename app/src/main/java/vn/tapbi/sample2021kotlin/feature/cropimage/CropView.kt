@@ -13,9 +13,11 @@ import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import timber.log.Timber
 import vn.tapbi.sample2021kotlin.R
 import vn.tapbi.sample2021kotlin.feature.stickerview.BitmapStickerIcon
 import vn.tapbi.sample2021kotlin.feature.stickerview.Sticker
@@ -44,9 +46,7 @@ class CropView : StickerView {
         context,
         attrs,
         defStyleAttr
-    ){
-        limitScale = sqrt(width.toDouble().pow(2.0) + height.toDouble().pow(2.0)).toFloat()
-    }
+    )
 
     override fun configDefaultIcons() {
         val zoomIcon = BitmapStickerIcon(
@@ -77,6 +77,7 @@ class CropView : StickerView {
             cropOverlay = CropOverlay(drawable)
             addSticker(cropOverlay)
         }
+
     }
 
 
@@ -108,6 +109,8 @@ class CropView : StickerView {
                 textPaint
             )
         }
+        limitScale = sqrt(width.toDouble().pow(2.0) + height.toDouble().pow(2.0)).toFloat()
+        Timber.e("limitScale: $limitScale")
 
     }
 
@@ -129,30 +132,65 @@ class CropView : StickerView {
         return 0f
     }
 
-    override fun zoomAndRotateSticker(sticker: Sticker?, event: MotionEvent) {
-        if (sticker != null) {
-            val newDistance = calculateDistance(midPoint.x, midPoint.y, event.x, event.y)
-            val newRotation = calculateRotation(midPoint.x, midPoint.y, event.x, event.y)
-//            var scale = newDistance / oldDistance
-//
-//            if (limitScale != 0f) {
-//                scale = limitScale(scale, limitScale)
-//            }
+    override fun actionZoomWithTwoFinger(event: MotionEvent) {
+        if (handlingSticker != null) {
+            val newDistance = calculateDistance(event)
+            val newRotation = calculateRotation(event)
+            var scale = newDistance / oldDistance
 
-            val scaleX = scaleX(downX, event.x)
-            val scaleY = scaleY(downY, event.y)
+            if (limitScale != 0f) {
+                scale = limitScale(scale, limitScale)
+            }
 
             moveMatrix.set(downMatrix)
             moveMatrix.postScale(
-                scaleX, scaleY, bitmapPoints[0],
-                bitmapPoints[1]
+                scale, scale, midPoint.x,
+                midPoint.y
             )
             moveMatrix.postRotate(newRotation - oldRotation, midPoint.x, midPoint.y)
             handlingSticker.setMatrix(moveMatrix)
         }
+
     }
 
+    override fun zoomAndRotateSticker(sticker: Sticker?, event: MotionEvent) {
+        if (sticker != null) {
 
+            val scaleX = event.x / downX
+            val scaleY = event.y / downY
+
+            moveMatrix.set(downMatrix)
+            moveMatrix.postScale(scaleX, scaleY)
+            handlingSticker.setMatrix(moveMatrix)
+        }
+    }
+
+    override fun constrainSticker(sticker: Sticker) {
+        var moveX = 0f
+        var moveY = 0f
+        val width = width
+        val height = height
+        val stickerWidth = bitmapPoints[2] - bitmapPoints[0]
+        val stickerHeight = bitmapPoints[5] - bitmapPoints[1]
+        sticker.getMappedCenterPoint(currentCenterPoint, point, tmp)
+        if (currentCenterPoint.x < stickerWidth / 2) {
+            moveX = -currentCenterPoint.x + stickerWidth / 2
+        }
+
+        if (currentCenterPoint.x > (width - stickerWidth / 2)) {
+            moveX = width - stickerWidth / 2 - currentCenterPoint.x
+        }
+
+        if (currentCenterPoint.y < stickerHeight / 2) {
+            moveY = -currentCenterPoint.y + stickerHeight / 2
+        }
+
+        if (currentCenterPoint.y > (height - stickerHeight / 2)) {
+            moveY = height - stickerHeight / 2 - currentCenterPoint.y
+        }
+
+        sticker.matrix.postTranslate(moveX, moveY)
+    }
 
     fun cropImageWithPath(): Bitmap? {
 
@@ -179,14 +217,25 @@ class CropView : StickerView {
 
             cropOverlay.getMappedPoints(bitmapPoints)
 
-            val x1 = bitmapPoints[0]
-            val y1 = bitmapPoints[1]
-            val x2 = bitmapPoints[2]
-            val y2 = bitmapPoints[3]
-            val x3 = bitmapPoints[4]
-            val y3 = bitmapPoints[5]
-            val x4 = bitmapPoints[6]
-            val y4 = bitmapPoints[7]
+            var x1 = bitmapPoints[0]
+            var y1 = bitmapPoints[1]
+            var x2 = bitmapPoints[2]
+            var y2 = bitmapPoints[3]
+            var x3 = bitmapPoints[4]
+            var y3 = bitmapPoints[5]
+            var x4 = bitmapPoints[6]
+            var y4 = bitmapPoints[7]
+
+            if (x4 > height) {
+                x2 = width.toFloat()
+                x4 = width.toFloat()
+            }
+
+            if (y4 > height) {
+                y3 = height.toFloat()
+                y4 = height.toFloat()
+            }
+
 
             val path = Path()
             path.reset()

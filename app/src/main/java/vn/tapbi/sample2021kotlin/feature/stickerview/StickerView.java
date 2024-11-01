@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.SystemClock;
@@ -31,7 +32,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import timber.log.Timber;
 import vn.tapbi.sample2021kotlin.R;
 import vn.tapbi.sample2021kotlin.utils.Utils;
 
@@ -86,9 +86,9 @@ public class StickerView extends FrameLayout {
     // region storing variables
     protected final float[] bitmapPoints = new float[8];
     private final float[] bounds = new float[8];
-    private final float[] point = new float[2];
-    private final PointF currentCenterPoint = new PointF();
-    private final float[] tmp = new float[2];
+    protected final float[] point = new float[2];
+    protected final PointF currentCenterPoint = new PointF();
+    protected final float[] tmp = new float[2];
     protected PointF midPoint = new PointF();
     // endregion
     private final int touchSlop;
@@ -428,36 +428,11 @@ public class StickerView extends FrameLayout {
             case ActionMode.CLICK:
                 break;
             case ActionMode.DRAG:
-                if (handlingSticker != null) {
-
-                    moveMatrix.set(downMatrix); // set moveMatrix = downMatrix (downMatrix set in action DOWN)
-                    moveMatrix.postTranslate(event.getX() - downX, event.getY() - downY); // translate moveMatrix to new matrix location
-                    handlingSticker.setMatrix(moveMatrix); // sticker editting set matrix = moveMatrix
-
-                    if (constrained) {
-                        constrainSticker(handlingSticker);
-                    }
-
-                }
+                actionDrag(event);
                 break;
 
             case ActionMode.ZOOM_WITH_TWO_FINGER:
-                if (handlingSticker != null) {
-                    float newDistance = calculateDistance(event);
-                    float newRotation = calculateRotation(event);
-                    float scale = newDistance / oldDistance;
-
-                    if (limitScale != 0) {
-                        scale = limitScale(scale,limitScale);
-                    }
-
-
-                    moveMatrix.set(downMatrix);
-                    moveMatrix.postScale(scale, scale, midPoint.x,
-                            midPoint.y);
-                    moveMatrix.postRotate(newRotation - oldRotation, midPoint.x, midPoint.y);
-                    handlingSticker.setMatrix(moveMatrix);
-                }
+                actionZoomWithTwoFinger(event);
 
                 break;
 
@@ -466,6 +441,39 @@ public class StickerView extends FrameLayout {
                     currentIcon.onActionMove(this, event);
                 }
                 break;
+        }
+    }
+
+    protected void actionZoomWithTwoFinger(@NonNull MotionEvent event) {
+        if (handlingSticker != null) {
+            float newDistance = calculateDistance(event);
+            float newRotation = calculateRotation(event);
+            float scale = newDistance / oldDistance;
+
+            if (limitScale != 0) {
+                scale = limitScale(scale, limitScale);
+            }
+
+
+            moveMatrix.set(downMatrix);
+            moveMatrix.postScale(scale, scale, midPoint.x,
+                    midPoint.y);
+            moveMatrix.postRotate(newRotation - oldRotation, midPoint.x, midPoint.y);
+            handlingSticker.setMatrix(moveMatrix);
+        }
+    }
+
+    private void actionDrag(@NonNull MotionEvent event) {
+        if (handlingSticker != null) {
+
+            moveMatrix.set(downMatrix); // set moveMatrix = downMatrix (downMatrix set in action DOWN)
+            moveMatrix.postTranslate(event.getX() - downX, event.getY() - downY); // translate moveMatrix to new matrix location
+            handlingSticker.setMatrix(moveMatrix); // sticker editting set matrix = moveMatrix
+
+            if (constrained) {
+                constrainSticker(handlingSticker);
+            }
+
         }
     }
 
@@ -483,7 +491,7 @@ public class StickerView extends FrameLayout {
             float scale = newDistance / oldDistance;
 
             if (limitScale != 0) {
-                scale = limitScale(scale,limitScale);
+                scale = limitScale(scale, limitScale);
             }
 
             moveMatrix.set(downMatrix);
@@ -506,70 +514,31 @@ public class StickerView extends FrameLayout {
     }
 
 
-//    protected void constrainSticker(@NonNull Sticker sticker) {
-//        float moveX = 0;
-//        float moveY = 0;
-//        int width = getWidth();
-//        int height = getHeight();
-//        sticker.getMappedCenterPoint(currentCenterPoint, point, tmp);
-//        if (currentCenterPoint.x < 0) {
-//            moveX = -currentCenterPoint.x;
-//        }
-//
-//        if (currentCenterPoint.x > width) {
-//            moveX = width - currentCenterPoint.x;
-//        }
-//
-//        if (currentCenterPoint.y < 0) {
-//            moveY = -currentCenterPoint.y;
-//        }
-//
-//        if (currentCenterPoint.y > height) {
-//            moveY = height - currentCenterPoint.y;
-//        }
-//
-//        sticker.getMatrix().postTranslate(moveX, moveY);
-//    }
-
     protected void constrainSticker(@NonNull Sticker sticker) {
         float moveX = 0;
         float moveY = 0;
-        float stickerWidth = Math.abs(bitmapPoints[2] - bitmapPoints[0]);
-        float stickerHeight = Math.abs(bitmapPoints[6] - bitmapPoints[4]);
+        int width = getWidth();
+        int height = getHeight();
         sticker.getMappedCenterPoint(currentCenterPoint, point, tmp);
-        if (currentCenterPoint.x - stickerWidth/2 < 0) {
-            moveX = -currentCenterPoint.x + stickerWidth/2;
-            Timber.e("currentCenterPoint.x: %s", currentCenterPoint.x);
-            Timber.e("stickerWidth: %s", stickerWidth);
-            Timber.e("moveX: %s", moveX);
+        if (currentCenterPoint.x < 0) {
+            moveX = -currentCenterPoint.x;
         }
 
-        if (currentCenterPoint.x + stickerWidth/2 > getWidth()) {
-            moveX = getWidth() - currentCenterPoint.x - stickerWidth/2;
-            Timber.e("currentCenterPoint.x: %s", currentCenterPoint.x);
-            Timber.e("stickerWidth: %s", stickerWidth);
-            Timber.e("moveX: %s", moveX);
-            Timber.e("getWidth: %s", getWidth());
+        if (currentCenterPoint.x > width) {
+            moveX = width - currentCenterPoint.x;
         }
 
-        if (currentCenterPoint.y - stickerHeight/2 < 0) {
-            moveY = -currentCenterPoint.y + stickerHeight/2;
-            Timber.e("currentCenterPoint.y: %s", currentCenterPoint.y);
-            Timber.e("stickerHeight: %s", stickerHeight);
-            Timber.e("moveY: %s", moveY);
-            Timber.e("getHeight: %s", getHeight());
+        if (currentCenterPoint.y < 0) {
+            moveY = -currentCenterPoint.y;
         }
 
-        if (currentCenterPoint.y + stickerHeight/2 > getHeight()) {
-            moveY = getHeight() - currentCenterPoint.y - stickerHeight/2;
-            Timber.e("currentCenterPoint.y: %s", currentCenterPoint.y);
-            Timber.e("stickerHeight: %s", getHeight());
-            Timber.e("moveY: %s", moveY);
-            Timber.e("getHeight: %s", getHeight());
+        if (currentCenterPoint.y > height) {
+            moveY = height - currentCenterPoint.y;
         }
 
         sticker.getMatrix().postTranslate(moveX, moveY);
     }
+
 
 
 
@@ -667,11 +636,11 @@ public class StickerView extends FrameLayout {
     }
 
     protected float scaleX(float x1, float x2) {
-        return x2/x1;
+        return x2 / x1;
     }
 
     protected float scaleY(float y1, float y2) {
-        return y2/y1;
+        return y2 / y1;
     }
 
     @Override
@@ -684,7 +653,6 @@ public class StickerView extends FrameLayout {
             }
         }
     }
-
 
 
     private float limitScaleSize(Sticker sticker, float newDistance) {

@@ -1,6 +1,9 @@
 package vn.tapbi.sample2021kotlin.feature.cropimage
 
 import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import androidx.annotation.IntRange
@@ -21,7 +24,6 @@ class CropOverlay(private var drawable: Drawable) : Sticker() {
         this.drawable = drawable
         return this
     }
-
 
     override fun draw(canvas: Canvas) {
         canvas.save()

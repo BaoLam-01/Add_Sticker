@@ -9,6 +9,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -77,7 +79,7 @@ public class StickerView extends FrameLayout {
     private final List<BitmapStickerIcon> icons = new ArrayList<>(4);
 
     private final Paint borderPaint = new Paint();
-    private final RectF stickerRect = new RectF();
+    protected final RectF stickerRect = new RectF();
 
     private final Matrix sizeMatrix = new Matrix();
     protected final Matrix downMatrix = new Matrix();
@@ -142,7 +144,6 @@ public class StickerView extends FrameLayout {
             borderPaint.setStrokeWidth(5);
             borderPaint.setColor(a.getColor(R.styleable.StickerView_borderColor, Color.BLACK));
             borderPaint.setAlpha(a.getInteger(R.styleable.StickerView_borderAlpha, 128));
-
             configDefaultIcons();
         } finally {
             if (a != null) {

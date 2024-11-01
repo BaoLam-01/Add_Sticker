@@ -67,7 +67,7 @@ public class BitmapUtils {
                 picToCrop.getHeight() - marginTop - marginBottom);
     }
 
-    public static Bitmap getCroppedBitmap(Bitmap src, Path path) {
+    public static Bitmap getCroppedBitmap(Bitmap src, Path path, float left, float top) {
         Bitmap output = Bitmap.createBitmap(src.getWidth(),
                 src.getHeight(), Bitmap.Config.ARGB_8888);
 
@@ -82,7 +82,7 @@ public class BitmapUtils {
         // discards the remaining source and destination pixels.
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 
-        canvas.drawBitmap(src, 0, 0, paint);
+        canvas.drawBitmap(src, left, top, paint);
 
         return output;
     }

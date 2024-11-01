@@ -84,6 +84,7 @@ dependencies {
     implementation libraries.androidUICommon
     implementation libraries.materialDesign
     implementation libraries.hilt
+    implementation project(':uCrop')
     kapt libraries.hiltKpt
     annotationProcessor libraries.hiltAP
 
@@ -118,4 +119,6 @@ dependencies {
 
 //    implementation 'com.github.gomsang:DrawCropAndroid:0.0.3'
     implementation("com.vanniktech:android-image-cropper:4.3.3")
+
+//    implementation ("com.github.yalantis:ucrop:2.2.8-native")
 }

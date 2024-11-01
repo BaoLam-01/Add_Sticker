@@ -10,27 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-<!--        <com.canhub.cropper.CropImageView-->
-<!--            android:id="@+id/cropImageView"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:src="@drawable/meo"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-        <vn.tapbi.sample2021kotlin.feature.cropimage.CropView
-            android:id="@+id/cropView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tvNext"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:borderColor="@color/border_color"
-            app:showBorder="true"
-            app:showIcons="true"
-            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvNext"
@@ -43,15 +22,15 @@
             android:padding="16dp"
             android:textColor="@color/blue"/>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/outImage"
+        <com.yalantis.ucrop.view.CropImageView
+            android:id="@+id/uCrop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/cropView"
+            android:adjustViewBounds="true"
+            app:layout_constraintTop_toBottomOf="@id/tvNext"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

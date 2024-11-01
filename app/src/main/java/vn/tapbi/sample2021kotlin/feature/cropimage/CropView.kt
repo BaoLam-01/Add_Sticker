@@ -32,12 +32,21 @@ class CropView : StickerView {
     private var bitmapImage: Bitmap? = null
     private var imageView: ImageView = ImageView(this.context)
     private lateinit var cropOverlay: CropOverlay
+    private val clearPaint = Paint().apply {
+        xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+    }
 
     private var viewCanvasWidth = 0
     private var viewCanvasHeight = 0
     private var actualVisibleBitmap: Bitmap? = null
     private var limitScale: Float = 0f;
 
+    private lateinit var zoomIcon: BitmapStickerIcon
+
+    private val overlayPaint = Paint().apply {
+        color = Color.BLACK
+        alpha = 100 // set alpha
+    }
 
     constructor(context: Context) : super(context, null)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -49,7 +58,7 @@ class CropView : StickerView {
     )
 
     override fun configDefaultIcons() {
-        val zoomIcon = BitmapStickerIcon(
+        zoomIcon = BitmapStickerIcon(
             ContextCompat.getDrawable(context, R.drawable.zoom_sticker_icon),
             BitmapStickerIcon.RIGHT_BOTOM
         )
@@ -93,6 +102,21 @@ class CropView : StickerView {
                 height,
                 width
             )
+
+            val saveCount = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), null)
+            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), overlayPaint)
+
+            val path = getPathFromBitmapPoint2()
+
+            canvas.drawPath(path, clearPaint)
+            canvas.drawCircle(
+                zoomIcon.x,
+                zoomIcon.y,
+                zoomIcon.drawable.intrinsicHeight / 2f,
+                clearPaint
+            )
+
+            canvas.restoreToCount(saveCount)
 
         } else {
             canvas.drawColor(Color.WHITE)
@@ -192,9 +216,16 @@ class CropView : StickerView {
         sticker.matrix.postTranslate(moveX, moveY)
     }
 
+    fun cropImage() : Bitmap? {
+        actualVisibleBitmap?.let {
+            return BitmapUtils.getCroppedBitmap(it, getPathFromBitmapPoint(), bitmapPoints[0], bitmapPoints[1])
+        }
+        return null
+    }
+
     fun cropImageWithPath(): Bitmap? {
 
-        bitmapImage?.let {
+        actualVisibleBitmap?.let {
 
 
             val resultImage =
@@ -205,61 +236,95 @@ class CropView : StickerView {
 
 
             // struct paint for naturally
-            resultPaint.isAntiAlias = true
             resultPaint.isDither = true // set the dither to true
             resultPaint.strokeJoin = Paint.Join.ROUND // set the join to round you want
             resultPaint.strokeCap = Paint.Cap.ROUND // set the paint cap to round too
-            resultPaint.setPathEffect(CornerPathEffect(10f))
+//            resultPaint.setPathEffect(CornerPathEffect(10f))
             resultPaint.isAntiAlias = true // set anti alias so it smooths
 
 
             // struct paint for path-crop
 
-            cropOverlay.getMappedPoints(bitmapPoints)
-
-            var x1 = bitmapPoints[0]
-            var y1 = bitmapPoints[1]
-            var x2 = bitmapPoints[2]
-            var y2 = bitmapPoints[3]
-            var x3 = bitmapPoints[4]
-            var y3 = bitmapPoints[5]
-            var x4 = bitmapPoints[6]
-            var y4 = bitmapPoints[7]
-
-            if (x4 > height) {
-                x2 = width.toFloat()
-                x4 = width.toFloat()
-            }
-
-            if (y4 > height) {
-                y3 = height.toFloat()
-                y4 = height.toFloat()
-            }
-
-
-            val path = Path()
-            path.reset()
-            path.moveTo(x1, y1)
-            path.lineTo(x2, y2)
-            path.lineTo(x4, y4)
-            path.lineTo(x3, y3)
+            val path = getPathFromBitmapPoint()
 
             resultCanvas.drawPath(path, resultPaint)
             resultPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
 
             val dst = Rect(
-                viewCanvasWidth / 2 - actualVisibleBitmap!!.width / 2,
-                viewCanvasHeight / 2 - actualVisibleBitmap!!.height / 2,
-                viewCanvasWidth / 2 + actualVisibleBitmap!!.width / 2,
-                viewCanvasHeight / 2 + actualVisibleBitmap!!.height / 2
+                viewCanvasWidth / 2 - it.width / 2,
+                viewCanvasHeight / 2 - it.height / 2,
+                viewCanvasWidth / 2 + it.width / 2,
+                viewCanvasHeight / 2 + it.height / 2
             )
 
-            resultCanvas.drawBitmap(actualVisibleBitmap!!, null, dst, resultPaint)
+            resultCanvas.drawBitmap(it, null, dst, resultPaint)
+//            resultCanvas.drawBitmap(actualVisibleBitmap!!,0f,0f, resultPaint)
 
             return BitmapUtils.cropBitmapToBoundingBox(resultImage, Color.TRANSPARENT)
         }
 
         return null
+    }
+
+
+    private fun getPathFromBitmapPoint(): Path {
+        var x1 = bitmapPoints[0]
+        var y1 = bitmapPoints[1]
+        var x2 = bitmapPoints[2]
+        var y2 = bitmapPoints[3]
+        var x3 = bitmapPoints[4]
+        var y3 = bitmapPoints[5]
+        var x4 = bitmapPoints[6]
+        var y4 = bitmapPoints[7]
+
+        if (x4 > height) {
+            x2 = width.toFloat()
+            x4 = width.toFloat()
+        }
+
+        if (y4 > height) {
+            y3 = height.toFloat()
+            y4 = height.toFloat()
+        }
+
+
+        val path = Path()
+        path.reset()
+        path.moveTo(x1, y1)
+        path.lineTo(x2, y2)
+        path.lineTo(x4, y4)
+        path.lineTo(x3, y3)
+        return path
+    }
+
+    private fun getPathFromBitmapPoint2(): Path {
+        var x1 = bitmapPoints[0] - 2
+        var y1 = bitmapPoints[1] - 2
+        var x2 = bitmapPoints[2] + 2
+        var y2 = bitmapPoints[3] - 2
+        var x3 = bitmapPoints[4] - 2
+        var y3 = bitmapPoints[5] + 2
+        var x4 = bitmapPoints[6] + 2
+        var y4 = bitmapPoints[7] + 2
+
+        if (x4 > height) {
+            x2 = width.toFloat()
+            x4 = width.toFloat()
+        }
+
+        if (y4 > height) {
+            y3 = height.toFloat()
+            y4 = height.toFloat()
+        }
+
+
+        val path = Path()
+        path.reset()
+        path.moveTo(x1, y1)
+        path.lineTo(x2, y2)
+        path.lineTo(x4, y4)
+        path.lineTo(x3, y3)
+        return path
     }
 
 

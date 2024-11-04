@@ -18,10 +18,17 @@ class ShowCutFragment : BaseBindingFragment<FragmentShowCutBinding, ShowCutViewM
 
     override fun observerData() {
     }
+    companion object {
+        fun newInstance(bundle: Bundle): ShowCutFragment {
+            val fragment = ShowCutFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
 
     override fun onCreatedView(view: View?, savedInstanceState: Bundle?) {
 
-        val uriString = arguments?.getString("uriImage")
+        val uriString = arguments?.getString("outUri")
         val uri = Uri.parse(uriString)
 
         val bitmapImage = BitmapUtils.getBitmapFromUri(uri, context)

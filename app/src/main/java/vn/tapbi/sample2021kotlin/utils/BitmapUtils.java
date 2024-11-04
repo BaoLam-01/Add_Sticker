@@ -4,10 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.net.Uri;
 
 import java.io.File;
@@ -116,5 +118,13 @@ public class BitmapUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Bitmap scaleBitmapAndKeepRation(Bitmap targetBmp, int reqHeightInPixels,int reqWidthInPixels) {
+        Matrix m = new Matrix();
+        m.setRectToRect(new RectF(0f, 0f, (float)targetBmp.getWidth(), (float) targetBmp.getHeight()),
+                new RectF(0f, 0f, (float)reqWidthInPixels, (float) reqHeightInPixels),
+                Matrix.ScaleToFit.CENTER);
+        return Bitmap.createBitmap(targetBmp, 0, 0, targetBmp.getWidth(), targetBmp.getHeight(),m, true);
     }
 }

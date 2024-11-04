@@ -7,10 +7,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.navigation.Navigation
 import com.yalantis.ucrop.UCrop
+import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.view.GestureCropImageView
 import com.yalantis.ucrop.view.OverlayView
 import com.yalantis.ucrop.view.UCropView
@@ -25,6 +28,7 @@ class CropImageFragment : BaseBindingFragment<FragmentCropImageBinding, CropImag
     private lateinit var uCrop: UCropView
     private lateinit var mGestureCropImageView: GestureCropImageView
     private lateinit var mOverlayView: OverlayView
+    private lateinit var uCropFragment: UCropFragment
 
     private val choseImage: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
@@ -53,23 +57,13 @@ class CropImageFragment : BaseBindingFragment<FragmentCropImageBinding, CropImag
                 )
             )
         )
-        mGestureCropImageView.setImageUri(
-            uri, Uri.fromFile(
-                File(
-                    requireContext().cacheDir,
-                    SAMPLE_CROPPED_IMAGE_NAME
-                )
-            )
-        )
-
-        mGestureCropImageView.invalidate()
 
 
         uCrop = configUCrop(uCrop)
 
-        val uCropFragment = uCrop.fragment
+        uCropFragment = uCrop.fragment
 
-//        parentFragmentManager.beginTransaction().add(R.id.frameCut, uCropFragment).commit()
+        parentFragmentManager.beginTransaction().add(R.id.frameCut, uCropFragment).commit()
 
     }
 
@@ -101,15 +95,15 @@ class CropImageFragment : BaseBindingFragment<FragmentCropImageBinding, CropImag
 
     override fun onCreatedView(view: View?, savedInstanceState: Bundle?) {
 
-        uCrop = binding.uCropView
-
-        uCrop.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.teal_200))
-
-        mGestureCropImageView = uCrop.cropImageView
-
-        mOverlayView = uCrop.overlayView
         pickFromGallery()
 
+        evenClick()
+
+    }
+    private fun evenClick() {
+        binding.tvNext.setOnClickListener {
+            uCropFragment.cropAndSaveImage()
+        }
     }
 
     private fun pickFromGallery() {
@@ -127,7 +121,6 @@ class CropImageFragment : BaseBindingFragment<FragmentCropImageBinding, CropImag
 
     override fun onPermissionGranted() {
     }
-
     companion object {
         private const val SAMPLE_CROPPED_IMAGE_NAME: String = "SampleCropImage.png"
     }

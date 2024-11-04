@@ -5,6 +5,8 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
+import com.yalantis.ucrop.UCropFragment
+import com.yalantis.ucrop.UCropFragmentCallback
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -15,7 +17,7 @@ import vn.tapbi.sample2021kotlin.common.models.MessageEvent
 import vn.tapbi.sample2021kotlin.databinding.ActivityMainBinding
 import vn.tapbi.sample2021kotlin.ui.base.BaseBindingActivity
 
-class MainActivity : BaseBindingActivity<ActivityMainBinding, MainViewModel>() {
+class MainActivity : BaseBindingActivity<ActivityMainBinding, MainViewModel>(), UCropFragmentCallback {
     override val layoutId: Int
         get() = R.layout.activity_main
 
@@ -42,6 +44,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun onDestroy() {
         super.onDestroy()
+    }
+
+    override fun loadingProgress(showLoader: Boolean) {
+    }
+
+    override fun onCropFinish(result: UCropFragment.UCropResult?) {
     }
 
 }

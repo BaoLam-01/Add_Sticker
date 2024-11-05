@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav.xml"
-    app:startDestination="@id/cropImageWithShape">
+    app:startDestination="@id/adjustCutFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -26,5 +26,9 @@
         android:id="@+id/cropImageWithShape"
         android:name="vn.tapbi.sample2021kotlin.ui.main.cropwithshape.CropWithShapeFragment"
         android:label="crop with shape Fragment" />
+    <fragment
+        android:id="@+id/adjustCutFragment"
+        android:name="vn.tapbi.sample2021kotlin.ui.main.adjustcut.AdjustCutFragment"
+        android:label="Adjust Cut Fragment" />
 
 </navigation>

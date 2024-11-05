@@ -11,6 +11,7 @@
     <color name="sticker_border">#ff666666</color>
     <color name="border_color">#6552FE</color>
     <color name="light_gray" >#CACACA</color>
-    <color name="color_paint" >#325FFF</color>
+    <color name="color_paint" >#98325FFF</color>
+    <color name="color_paint_cut_out">#325FFF</color>
     <color name="blue">#36A2F4</color>
 </resources>

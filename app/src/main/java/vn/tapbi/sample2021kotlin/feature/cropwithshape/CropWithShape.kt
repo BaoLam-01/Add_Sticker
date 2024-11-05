@@ -44,30 +44,10 @@ class CropWithShape : androidx.appcompat.widget.AppCompatImageView {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         imageBitmap?.let {
-            if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.AT_MOST) {
-                setMeasuredDimension(it.width, measureSize(heightMeasureSpec))
-            } else if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST) {
-                setMeasuredDimension(measureSize(widthMeasureSpec), it.height)
-            } else if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.AT_MOST && MeasureSpec.getMode(
-                    heightMeasureSpec
-                ) == MeasureSpec.AT_MOST
-            ){
-                setMeasuredDimension(it.width, it.height)
-            } else {
-                setMeasuredDimension(measureSize(widthMeasureSpec), measureSize(heightMeasureSpec))
-            }
-        } ?: setMeasuredDimension(measureSize(widthMeasureSpec), measureSize(heightMeasureSpec))
+            setMeasuredDimension(it.width, it.height)
+        } ?: setMeasuredDimension(widthMeasureSpec, heightMeasureSpec)
     }
 
-    private fun measureSize(measureSpec: Int): Int {
-        val mode = MeasureSpec.getMode(measureSpec)
-        val size = MeasureSpec.getSize(measureSpec)
-        return when (mode) {
-            MeasureSpec.EXACTLY -> size
-            MeasureSpec.UNSPECIFIED -> size.coerceAtMost(500)
-            else -> 0
-        }
-    }
 
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {

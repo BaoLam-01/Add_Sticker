@@ -17,6 +17,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import vn.tapbi.sample2021kotlin.R
 import vn.tapbi.sample2021kotlin.utils.BitmapUtils
 import kotlin.math.pow
@@ -48,7 +49,7 @@ class CutOutView : androidx.appcompat.widget.AppCompatImageView {
     init {
         path.reset()
         paint.apply {
-            color = Color.BLACK
+            color = ContextCompat.getColor(context, R.color.color_paint_cut_out)
             style = Paint.Style.STROKE
             strokeWidth = 10f
             strokeCap = Paint.Cap.ROUND
@@ -221,7 +222,6 @@ class CutOutView : androidx.appcompat.widget.AppCompatImageView {
 
 
         // struct paint for naturally
-        resultPaint.isAntiAlias = true
         resultPaint.isDither = true // set the dither to true
         resultPaint.strokeJoin = Paint.Join.ROUND // set the join to round you want
         resultPaint.strokeCap = Paint.Cap.ROUND // set the paint cap to round too

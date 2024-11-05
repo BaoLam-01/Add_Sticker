@@ -85,6 +85,7 @@ dependencies {
     implementation libraries.materialDesign
     implementation libraries.hilt
     implementation project(':uCrop')
+    implementation 'com.google.ar.sceneform:filament-android:1.17.1'
     kapt libraries.hiltKpt
     annotationProcessor libraries.hiltAP
 

@@ -32,8 +32,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 @SuppressWarnings("unused")
 public class PhotoView extends AppCompatImageView {
 
-    private PhotoViewAttacher attacher;
-    private ScaleType pendingScaleType;
+    protected PhotoViewAttacher attacher;
+    protected ScaleType pendingScaleType;
 
     public PhotoView(Context context) {
         this(context, null);
@@ -48,7 +48,7 @@ public class PhotoView extends AppCompatImageView {
         init();
     }
 
-    private void init() {
+    protected void init() {
         attacher = new PhotoViewAttacher(this);
         //We always pose as a Matrix scale type, though we can change to another scale type
         //via the attacher
@@ -148,6 +148,10 @@ public class PhotoView extends AppCompatImageView {
 
     public void setZoomable(boolean zoomable) {
         attacher.setZoomable(zoomable);
+    }
+
+    public void setDragging(boolean isDrag){
+        attacher.setDragging(false);
     }
 
     public RectF getDisplayRect() {

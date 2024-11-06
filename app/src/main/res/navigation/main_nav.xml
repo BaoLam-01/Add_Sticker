@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav.xml"
-    app:startDestination="@id/cropImageWithShape">
+    app:startDestination="@id/adjustCutFragment">
 
     <fragment
         android:id="@+id/homeFragment"

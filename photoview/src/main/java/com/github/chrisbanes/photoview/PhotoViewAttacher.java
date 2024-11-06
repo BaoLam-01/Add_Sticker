@@ -95,9 +95,17 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private boolean mZoomEnabled = true;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
+    private boolean isDragging = true;
+
     private OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
         public void onDrag(float dx, float dy) {
+
+            if (!isDragging) {
+                return;
+            }
+            /*bug here not drag with two finger*/
+
             if (mScaleDragDetector.isScaling()) {
                 return; // Do not drag if we are already scaling
             }
@@ -136,6 +144,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         @Override
         public void onFling(float startX, float startY, float velocityX, float velocityY) {
+            if (!isDragging) {
+                return;
+            }
+
             mCurrentFlingRunnable = new FlingRunnable(mImageView.getContext());
             mCurrentFlingRunnable.fling(getImageViewWidth(mImageView),
                 getImageViewHeight(mImageView), (int) velocityX, (int) velocityY);
@@ -495,6 +507,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         update();
     }
 
+    public void setDragging(boolean isDrag){
+        isDragging = isDrag;
+    }
+
+
+
     public void update() {
         if (mZoomEnabled) {
             // Update the base matrix using the current drawable
@@ -502,6 +520,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         } else {
             // Reset the Matrix...
             resetMatrix();
+
         }
     }
 

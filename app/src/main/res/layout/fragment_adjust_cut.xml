@@ -20,22 +20,18 @@
 
 
 
-<!--        <vn.tapbi.sample2021kotlin.feature.adjustcut.AdjustCutView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/adjustCutView"-->
-<!--            android:adjustViewBounds="true"-->
-<!--            android:background="@drawable/background_png"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/btnSwap"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent" />-->
-
-
-        <com.github.chrisbanes.photoview.PhotoView
-            android:id="@+id/photo_view"
+        <vn.tapbi.sample2021kotlin.feature.adjustcut.AdjustCutView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/adjustCutView"
+            android:adjustViewBounds="true"
+            android:background="@drawable/background_png"
+            app:layout_constraintTop_toBottomOf="@id/btnSwap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

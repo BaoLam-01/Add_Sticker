@@ -10,25 +10,17 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.AttributeSet
-import android.view.GestureDetector
 import androidx.core.content.ContextCompat
-import com.github.chrisbanes.photoview.OnMatrixChangedListener
-import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
-import com.github.chrisbanes.photoview.OnPhotoTapListener
-import com.github.chrisbanes.photoview.OnScaleChangedListener
-import com.github.chrisbanes.photoview.OnSingleFlingListener
-import com.github.chrisbanes.photoview.OnViewDragListener
-import com.github.chrisbanes.photoview.OnViewTapListener
-import com.github.chrisbanes.photoview.PhotoViewAttacher
+import androidx.core.graphics.drawable.toBitmap
+import com.github.chrisbanes.photoview.PhotoView
 import vn.tapbi.sample2021kotlin.R
 import vn.tapbi.sample2021kotlin.utils.BitmapUtils
 
 
-class CropWithShape : androidx.appcompat.widget.AppCompatImageView {
+class CropWithShape : PhotoView {
 
     private val paintClear: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var imageBitmap = BitmapFactory.decodeResource(resources, R.drawable.meo)
@@ -36,25 +28,8 @@ class CropWithShape : androidx.appcompat.widget.AppCompatImageView {
     private var heartMask: Bitmap? = null
     private lateinit var actualBitmap: Bitmap
 
-    private var attacher: PhotoViewAttacher? = null
-    private var pendingScaleType: ScaleType? = null
 
     private val imgMatrix = Matrix()
-
-    init {
-        attacher = PhotoViewAttacher(this)
-
-
-        //We always pose as a Matrix scale type, though we can change to another scale type
-        //via the attacher
-        super.setScaleType(ScaleType.MATRIX)
-
-        //apply the previously applied scale type
-        if (pendingScaleType != null) {
-            scaleType = pendingScaleType as ScaleType
-            pendingScaleType = null
-        }
-    }
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -74,10 +49,6 @@ class CropWithShape : androidx.appcompat.widget.AppCompatImageView {
         requestLayout()
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -144,10 +115,6 @@ class CropWithShape : androidx.appcompat.widget.AppCompatImageView {
         return outputBitmap
     }
 
-    fun getAttacher(): PhotoViewAttacher {
-        return attacher!!
-    }
-
     override fun getScaleType(): ScaleType {
         return attacher!!.scaleType
     }
@@ -178,6 +145,8 @@ class CropWithShape : androidx.appcompat.widget.AppCompatImageView {
         if (attacher != null) {
             attacher!!.update()
         }
+
+        imageBitmap = drawable?.toBitmap()
     }
 
     override fun setImageResource(resId: Int) {
@@ -193,133 +162,8 @@ class CropWithShape : androidx.appcompat.widget.AppCompatImageView {
         if (attacher != null) {
             attacher!!.update()
         }
+
+        imageBitmap = BitmapUtils.getBitmapFromUri(uri, context)
     }
 
-    override fun setFrame(l: Int, t: Int, r: Int, b: Int): Boolean {
-        val changed = super.setFrame(l, t, r, b)
-        if (changed) {
-            attacher!!.update()
-        }
-        return changed
-    }
-
-    fun setRotationTo(rotationDegree: Float) {
-        attacher!!.setRotationTo(rotationDegree)
-    }
-
-    fun setRotationBy(rotationDegree: Float) {
-        attacher!!.setRotationBy(rotationDegree)
-    }
-
-    fun isZoomable(): Boolean {
-        return attacher!!.isZoomable
-    }
-
-    fun setZoomable(zoomable: Boolean) {
-        attacher!!.isZoomable = zoomable
-    }
-
-    fun getDisplayRect(): RectF {
-        return attacher!!.displayRect
-    }
-
-    fun getDisplayMatrix(matrix: Matrix?) {
-        attacher!!.getDisplayMatrix(matrix)
-    }
-
-    fun setDisplayMatrix(finalRectangle: Matrix?): Boolean {
-        return attacher!!.setDisplayMatrix(finalRectangle)
-    }
-
-    fun getSuppMatrix(matrix: Matrix?) {
-        attacher!!.getSuppMatrix(matrix)
-    }
-
-    fun setSuppMatrix(matrix: Matrix?): Boolean {
-        return attacher!!.setDisplayMatrix(matrix)
-    }
-
-    fun getMinimumScale(): Float {
-        return attacher!!.minimumScale
-    }
-
-    fun getMediumScale(): Float {
-        return attacher!!.mediumScale
-    }
-
-    fun getMaximumScale(): Float {
-        return attacher!!.maximumScale
-    }
-
-    fun getScale(): Float {
-        return attacher!!.scale
-    }
-
-    fun setAllowParentInterceptOnEdge(allow: Boolean) {
-        attacher!!.setAllowParentInterceptOnEdge(allow)
-    }
-
-    fun setMinimumScale(minimumScale: Float) {
-        attacher!!.minimumScale = minimumScale
-    }
-
-    fun setMediumScale(mediumScale: Float) {
-        attacher!!.mediumScale = mediumScale
-    }
-
-    fun setMaximumScale(maximumScale: Float) {
-        attacher!!.maximumScale = maximumScale
-    }
-
-    fun setScaleLevels(minimumScale: Float, mediumScale: Float, maximumScale: Float) {
-        attacher!!.setScaleLevels(minimumScale, mediumScale, maximumScale)
-    }
-
-    fun setOnMatrixChangeListener(listener: OnMatrixChangedListener?) {
-        attacher!!.setOnMatrixChangeListener(listener)
-    }
-
-    fun setOnPhotoTapListener(listener: OnPhotoTapListener?) {
-        attacher!!.setOnPhotoTapListener(listener)
-    }
-
-    fun setOnOutsidePhotoTapListener(listener: OnOutsidePhotoTapListener?) {
-        attacher!!.setOnOutsidePhotoTapListener(listener)
-    }
-
-    fun setOnViewTapListener(listener: OnViewTapListener?) {
-        attacher!!.setOnViewTapListener(listener)
-    }
-
-    fun setOnViewDragListener(listener: OnViewDragListener?) {
-        attacher!!.setOnViewDragListener(listener)
-    }
-
-    fun setScale(scale: Float) {
-        attacher!!.scale = scale
-    }
-
-    fun setScale(scale: Float, animate: Boolean) {
-        attacher!!.setScale(scale, animate)
-    }
-
-    fun setScale(scale: Float, focalX: Float, focalY: Float, animate: Boolean) {
-        attacher!!.setScale(scale, focalX, focalY, animate)
-    }
-
-    fun setZoomTransitionDuration(milliseconds: Int) {
-        attacher!!.setZoomTransitionDuration(milliseconds)
-    }
-
-    fun setOnDoubleTapListener(onDoubleTapListener: GestureDetector.OnDoubleTapListener?) {
-        attacher!!.setOnDoubleTapListener(onDoubleTapListener)
-    }
-
-    fun setOnScaleChangeListener(onScaleChangedListener: OnScaleChangedListener?) {
-        attacher!!.setOnScaleChangeListener(onScaleChangedListener)
-    }
-
-    fun setOnSingleFlingListener(onSingleFlingListener: OnSingleFlingListener?) {
-        attacher!!.setOnSingleFlingListener(onSingleFlingListener)
-    }
 }

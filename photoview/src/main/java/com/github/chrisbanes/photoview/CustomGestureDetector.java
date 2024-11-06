@@ -108,6 +108,9 @@ class CustomGestureDetector {
     public boolean isDragging() {
         return mIsDragging;
     }
+    public void setDragging(boolean isDrag){
+        mIsDragging = isDrag;
+    }
 
     public boolean onTouchEvent(MotionEvent ev) {
         try {

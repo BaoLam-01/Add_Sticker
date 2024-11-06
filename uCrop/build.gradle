@@ -41,4 +41,5 @@ dependencies {
     implementation "androidx.transition:transition:${androidx_transition_version}"
     // OkHttp3 versions above 3.12.x don't support pre-Lollipop Android versions (API 21)
     implementation "com.squareup.okhttp3:okhttp:3.12.13"
+    implementation project(':photoview')
 }

@@ -3,6 +3,7 @@ package vn.tapbi.sample2021kotlin.ui.main.cropwithshape
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import vn.tapbi.sample2021kotlin.R
 import vn.tapbi.sample2021kotlin.databinding.FragmentCropWithShapeBinding
@@ -22,6 +23,9 @@ class CropWithShapeFragment :
     }
 
     override fun onCreatedView(view: View?, savedInstanceState: Bundle?) {
+        binding.cropWithShape.setImageDrawable(context?.let { ContextCompat.getDrawable(it,R.drawable.meo) })
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.meo)
+//        binding.cropWithShape.setImageBitmap(bitmap)
 
         binding.btnCut.setOnClickListener {
             val outBitmap = binding.cropWithShape.cutImageWithShape()

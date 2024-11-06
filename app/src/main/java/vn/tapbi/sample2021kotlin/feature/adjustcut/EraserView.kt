@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.graphics.Xfermode
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -28,7 +29,7 @@ class EraserView @JvmOverloads constructor(
         strokeJoin = Paint.Join.ROUND
         strokeCap = Paint.Cap.ROUND
         strokeWidth = 50f
-        xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) // Chế độ xóa
+        xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
     }
 
     private var lastX = 0f
@@ -71,26 +72,24 @@ class EraserView @JvmOverloads constructor(
                 lastY = y
                 return true
             }
+
             MotionEvent.ACTION_MOVE -> {
                 path.quadTo(lastX, lastY, (x + lastX) / 2, (y + lastY) / 2)
-                
-                if (paint.xfermode.equals(PorterDuff.Mode.SRC) ){
-                    // Khi khôi phục, vẽ lại từ bitmap gốc
-                    sourceBitmap?.let { source ->
-                        canvas?.drawPath(path, paint)
-                        canvas?.drawBitmap(source, 0f, 0f, paint)
-                    }
-                } else {
-                    // Khi xóa
+
+                sourceBitmap?.let { source ->
                     canvas?.drawPath(path, paint)
+                    val unEraserPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+                    unEraserPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
+                    canvas?.drawBitmap(source, 0f, 0f, unEraserPaint)
                 }
-                
+
                 lastX = x
                 lastY = y
                 invalidate()
-                path.reset()
-                path.moveTo(x, y)
+//                path.reset()
+//                path.moveTo(x, y)
             }
+
             MotionEvent.ACTION_UP -> {
                 path.reset()
             }

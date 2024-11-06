@@ -1,12 +1,15 @@
 package vn.tapbi.sample2021kotlin.ui.main.adjustcut
 
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.net.toUri
 import vn.tapbi.sample2021kotlin.R
 import vn.tapbi.sample2021kotlin.databinding.FragmentAdjustCutBinding
 import vn.tapbi.sample2021kotlin.feature.adjustcut.EraserView
 import vn.tapbi.sample2021kotlin.ui.base.BaseBindingFragment
+import vn.tapbi.sample2021kotlin.utils.BitmapUtils
 
 class AdjustCutFragment : BaseBindingFragment<FragmentAdjustCutBinding, AdjustCutViewModel>() {
 
@@ -23,25 +26,33 @@ class AdjustCutFragment : BaseBindingFragment<FragmentAdjustCutBinding, AdjustCu
     }
 
     override fun onCreatedView(view: View?, savedInstanceState: Bundle?) {
-        val bm = BitmapFactory.decodeResource(resources, R.drawable.meo)
-//        binding.adjustCut.setImageBitmap(bm)
+
+//        arguments?.let {
+//            val strUri = it.getString("outUri")
+//            val bitmap = BitmapUtils.getBitmapFromUri(Uri.parse(strUri), context)
 //
-//        binding.btnSwap.setOnClickListener {
-//            binding.adjustCut.setPaintEraser(!binding.adjustCut.getPaintEraser())
+//            binding.adjustCutView.setImageBitmap(bitmap)
+//
+//            binding.btnSwap.setOnClickListener {
+//                isErasing = !isErasing
+//                binding.adjustCutView.setEraseMode(isErasing)
+//            }
 //        }
+//
+//            val bitmap = BitmapFactory.decodeResource(resources,R.drawable.meo)
+//
+//
+//            binding.adjustCutView.setImageBitmap(bitmap)
+//
+//            binding.btnSwap.setOnClickListener {
+//                isErasing = !isErasing
+//                binding.adjustCutView.setEraseMode(isErasing)
+//            }
 
 
-        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.meo)
+        binding.photoView.setImageResource(R.drawable.meo);
 
 
-        // Tải và thiết lập hình ảnh
-        binding.eraserView.setImage(bitmap)
-
-        // Nút chuyển đổi giữa xóa và khôi phục
-        binding.btnSwap.setOnClickListener {
-            isErasing = !isErasing
-            binding.eraserView.setEraseMode(isErasing)
-        }
     }
 
     override fun onPermissionGranted() {

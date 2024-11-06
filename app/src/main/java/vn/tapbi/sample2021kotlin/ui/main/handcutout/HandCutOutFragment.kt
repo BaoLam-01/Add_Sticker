@@ -14,9 +14,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.navigation.Navigation
 import vn.tapbi.sample2021kotlin.R
 import vn.tapbi.sample2021kotlin.databinding.FragmentHandCutOutBinding
 import vn.tapbi.sample2021kotlin.ui.base.BaseBindingFragment
+import vn.tapbi.sample2021kotlin.utils.BitmapUtils
 import java.io.File
 import java.io.FileOutputStream
 
@@ -50,14 +52,14 @@ class HandCutOutFragment : BaseBindingFragment<FragmentHandCutOutBinding, HandCu
                 binding.tvNext.visibility = View.INVISIBLE
             }
         }
-    }
 
-    private fun saveBitmapToFile(bitmap: Bitmap, context: Context): Uri {
-        val file = File(context.cacheDir, "cutOutImage.png")
-        FileOutputStream(file).use { out ->
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+        binding.tvNext.setOnClickListener {
+            val outBitmap = binding.cutOutView.cropImageWithPath()
+            val outUri = BitmapUtils.saveBitmapToFile(outBitmap, requireContext())
+            val bundle = Bundle()
+            bundle.putString("outUri", outUri.toString())
+            Navigation.findNavController(binding.root).navigate(R.id.adjustCutFragment, bundle)
         }
-        return file.toUri()
     }
 
 

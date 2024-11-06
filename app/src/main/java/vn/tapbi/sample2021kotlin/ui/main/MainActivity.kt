@@ -58,7 +58,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding, MainViewModel>(), 
         val resultUri = UCrop.getOutput(result)
         if (resultUri != null) {
             val bundle = Bundle()
-            bundle.putString("uriImage", resultUri.toString())
+            bundle.putString("outUri", resultUri.toString())
 
             supportFragmentManager.beginTransaction().replace(R.id.fragment, ShowCutFragment.newInstance(bundle)).commit()
 

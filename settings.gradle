@@ -1,3 +1,4 @@
 include ':app'
 rootProject.name = "Tapbi Sample 2021 Kotlin"
 include ':uCrop'
+include ':photoview'

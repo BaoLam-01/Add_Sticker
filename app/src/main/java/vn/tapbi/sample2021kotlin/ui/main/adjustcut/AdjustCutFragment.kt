@@ -38,15 +38,17 @@ class AdjustCutFragment : BaseBindingFragment<FragmentAdjustCutBinding, AdjustCu
 
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.meo)
         binding.adjustCutView.setImageBitmap(bitmap)
-        binding.adjustCutView.setDragging(true)
+//        binding.adjustCutView.setImageResource(R.drawable.meo)
+        binding.adjustCutView.setDragging(false)
+        binding.adjustCutView.setDoubleClickToZoom(false)
         binding.adjustCutView.setAllowParentInterceptOnEdge(false)
 
 //
         binding.btnSwap.setOnClickListener {
-            isErasing = !isErasing
+            isErasing = !binding.adjustCutView.getPaintEraser()
             binding.adjustCutView.setEraseMode(isErasing)
         }
-
+//
 
     }
 

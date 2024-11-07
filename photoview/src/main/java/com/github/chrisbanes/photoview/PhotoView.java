@@ -151,7 +151,11 @@ public class PhotoView extends AppCompatImageView {
     }
 
     public void setDragging(boolean isDrag){
-        attacher.setDragging(false);
+        attacher.setDragging(isDrag);
+    }
+
+    public void setDoubleClickToZoom(boolean doubleClickToZoom){
+        attacher.setDoubleClickToZoom(doubleClickToZoom);
     }
 
     public RectF getDisplayRect() {
